@@ -20,6 +20,7 @@ com\elrancho\paystubwebapp\entity\LocalDateAttributeConverter.class
 com\elrancho\paystubwebapp\exception\InvalidSecurityQuestionException.class
 com\elrancho\paystubwebapp\entity\Employee.class
 com\elrancho\paystubwebapp\entity\PaystubId.class
+com\elrancho\paystubwebapp\model\PaystubSummary.class
 com\elrancho\paystubwebapp\MainApp.class
 com\elrancho\paystubwebapp\service\PaystubService.class
 com\elrancho\paystubwebapp\security\SecurityConstants.class
