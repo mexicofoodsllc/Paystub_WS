@@ -2,7 +2,6 @@ package com.elrancho.paystubwebapp.service;
 
 
 import java.time.LocalDate;
-import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +16,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 	@Autowired
 	EmployeeRepository employeeRepository;
 	
+	@Override
 	public Employee getEmployeeDetails(int empid) {
 		
 		Employee emp = employeeRepository.findByEmployeeId(empid);
@@ -25,6 +25,7 @@ public class EmployeeServiceImpl implements EmployeeService{
 	}
 	
 	//checking if an employee is active by 
+	@Override
 	public boolean activeEmployeeCheck(int empid) {
 		String status = null;
 		boolean isActive=true;

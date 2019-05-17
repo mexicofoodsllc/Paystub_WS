@@ -2,9 +2,6 @@ package com.elrancho.paystubwebapp.unit_test;
 
 import static org.junit.Assert.assertEquals;
 
-import java.time.LocalDate;
-import java.util.Optional;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.InjectMocks;
@@ -12,7 +9,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import static org.mockito.Mockito.*; 
 
-import com.elrancho.paystubwebapp.controller.PasswordResetController;
 import com.elrancho.paystubwebapp.entity.Employee;
 import com.elrancho.paystubwebapp.repository.EmployeeRepository;
 import com.elrancho.paystubwebapp.service.EmployeeServiceImpl;

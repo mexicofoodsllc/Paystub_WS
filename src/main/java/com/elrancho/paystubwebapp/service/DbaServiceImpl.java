@@ -2,7 +2,6 @@ package com.elrancho.paystubwebapp.service;
 
 import java.util.ArrayList;
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -52,6 +51,21 @@ public class DbaServiceImpl implements DbaService {
 			}
 		}
 		return descList;
+	}
+	
+	@Override
+	public String getDbaDesciption(int dbaCode) {
+		String dbaType=null;
+		List<Dba> dbaList = dbaRepository.findByDbaCode(dbaCode);
+		
+		for(Dba d: dbaList) {
+			if(d.getDbaCode()==dbaCode) {
+				dbaType = d.getDescription();
+			}
+		}
+		
+		
+		return dbaType;
 	}
 
 }

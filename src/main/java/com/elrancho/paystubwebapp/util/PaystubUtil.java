@@ -1,11 +1,8 @@
 package com.elrancho.paystubwebapp.util;
 
+import java.text.DecimalFormat;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
@@ -21,8 +18,6 @@ import com.elrancho.paystubwebapp.service.PaystubServiceImpl;
 @Service
 public class PaystubUtil {
 	
-	@Autowired
-	PaystubUtil ps;
 	@Autowired
 	PaystubServiceImpl psimpl;
 	@Autowired
@@ -96,33 +91,31 @@ public class PaystubUtil {
 		
 	}
 	
-	public float netPayGenerator(LocalDate date, int employeeId) {
+	public String netPayGenerator(LocalDate date, int employeeId) {
 		
 		
-		LocalDate saturdayDatepicker2 = dayConverter(date);
-		float netPay = 0;
+		//LocalDate saturdayDatepicker2 = dayConverter(date);
+		String grossPayString = grossPayGenerator(date,employeeId);
+		//initializing netpay to grossPay
+		float netPay = Float.parseFloat(grossPayString);
 		
-		List<Float> curAmount = psimpl.findCurrentAmount(saturdayDatepicker2,employeeId);
-		//initializing netPay to grossPay
-		 //if(psutil.validDateCheck(date)==true) {
-				netPay=curAmount.get(0);
-		 //}
+		List<Float> curAmount = psimpl.findCurrentAmount(date,employeeId);
 
 		 //List of dba codes corresponding to the dates chosen by user
-		   List<Integer> codeList = psimpl.findDbaCode(saturdayDatepicker2,employeeId);
+		   List<Integer> codeList = psimpl.findDbaCode(date,employeeId);
 		   
 		 //list of  description- Earning or deduction
 		   List<String> dbaDesc = dbaimpl.findDbaDescription(codeList);
 		   
 		   for(int i=1;i<dbaDesc.size();i++) {
-			   if(dbaDesc.get(i).contains("Earnings")) {
-				   netPay=curAmount.get(0)+curAmount.get(i);
-			   }
-			   else if(dbaDesc.get(i).contains("Deductions")) {
+			   if(dbaDesc.get(i).contains("Deductions")) {
 				   netPay=netPay-curAmount.get(i);
 			   }
 		   }
-		return netPay;
+		   DecimalFormat df = new DecimalFormat("0.00");
+		   String netPayString = df.format(netPay);
+		  
+		return  netPayString;
 		
 	}
 	
@@ -142,7 +135,7 @@ public class PaystubUtil {
 
 	public Set<LocalDate> getDates(List<Paystub> paystubList) {
 		Set<LocalDate> dateSet = new TreeSet<LocalDate>();
-		//List<Paystub> paystubList = psimpl.getAllPaystubs(empId);
+		//List<PaystubResponse> paystubList = psimpl.getAllPaystubs(empId);
 		for(Paystub p:paystubList) {
 			dateSet.add(p.getPayPeriodEndDate());
 		}
@@ -152,14 +145,34 @@ public class PaystubUtil {
 	
 
 
-	public Float grossPayGenerator(LocalDate datePicker, int employeeId){
+	public String grossPayGenerator(LocalDate datePicker, int employeeId){
 		LocalDate saturdayDatepicker2 = dayConverter(datePicker);
 		
-		 List<Float> currentAmount = psimpl.findCurrentAmount(saturdayDatepicker2, employeeId);
-		 float grossPay = currentAmount.get(0);
-		 return grossPay;
+	float grossPay = 0;
+		
+		List<Float> curAmount = psimpl.findCurrentAmount(saturdayDatepicker2,employeeId);
+
+
+		 //List of dba codes corresponding to the dates chosen by user
+		   List<Integer> codeList = psimpl.findDbaCode(saturdayDatepicker2,employeeId);
+		   
+		 //list of  description- Earning or deduction
+		   List<String> dbaDesc = dbaimpl.findDbaDescription(codeList);
+		   
+		   for(int i=0;i<dbaDesc.size();i++) {
+			   if(dbaDesc.get(i).contains("Earnings")) {
+				   grossPay +=curAmount.get(i);
+			   }
+		   }
+		   
+		   DecimalFormat df = new DecimalFormat("0.00");
+		   String grossPayString = df.format(grossPay);
+		
+		 return grossPayString;
 		
 	}
+	
+
 	
 
 }

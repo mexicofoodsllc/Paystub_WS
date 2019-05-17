@@ -9,23 +9,19 @@ import org.springframework.stereotype.Service;
 
 import com.elrancho.paystubwebapp.entity.Paystub;
 import com.elrancho.paystubwebapp.repository.PaystubRepository;
-import com.elrancho.paystubwebapp.util.PaystubUtil;
 
 @Service
 public class PaystubServiceImpl implements PaystubService {
 	
 	@Autowired 
 	private PaystubRepository paystubRepository;
-	@Autowired
-	PaystubUtil psutil;
 	public List<Paystub> paystubs;
 	
 	@Override
 	public List<Paystub> getAllPaystubs(int empId) {
 		List<Paystub> paystubs = paystubRepository.findByEmployeeId(empId);
-		System.out.println("in service "+paystubs);
-
-		
+		System.out.println("Reached service");
+		System.out.println("paystubs "+paystubs);
 		return paystubs;
 	}
 
@@ -78,10 +74,9 @@ public class PaystubServiceImpl implements PaystubService {
 	public List<Paystub> findPaystubDetails(LocalDate Date,int employeeId) {
 		Iterable<Paystub> paystubs = paystubRepository.findByEmployeeId(employeeId);
 		List<Paystub> ps= new ArrayList<Paystub>();
-		LocalDate saturdayDate = psutil.dayConverter(Date);
 		//filtering the paystub based on payperiod end date
 		for(Paystub paystub: paystubs) {
-			if(saturdayDate.equals(paystub.getPayPeriodEndDate())) {
+			if(Date.equals(paystub.getPayPeriodEndDate())) {
 				ps.add(paystub);
 			}
 						

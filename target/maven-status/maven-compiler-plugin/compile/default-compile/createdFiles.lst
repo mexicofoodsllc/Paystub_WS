@@ -1,6 +1,5 @@
 com\elrancho\paystubwebapp\entity\Users.class
 com\elrancho\paystubwebapp\service\DbaService.class
-com\elrancho\paystubwebapp\controller\RegisterController.class
 com\elrancho\paystubwebapp\repository\UsersRepository.class
 com\elrancho\paystubwebapp\service\EmployeeServiceImpl.class
 com\elrancho\paystubwebapp\repository\DbaRepository.class
@@ -12,7 +11,6 @@ com\elrancho\paystubwebapp\controller\PasswordResetController.class
 com\elrancho\paystubwebapp\exception\EmployeeInactiveException.class
 com\elrancho\paystubwebapp\entity\Paystub.class
 com\elrancho\paystubwebapp\service\PaystubServiceImpl.class
-com\elrancho\paystubwebapp\controller\LoginController.class
 com\elrancho\paystubwebapp\entity\Dba.class
 com\elrancho\paystubwebapp\security\AuthorizationFilter.class
 com\elrancho\paystubwebapp\exception\InvalidPasswordException.class
@@ -20,15 +18,14 @@ com\elrancho\paystubwebapp\entity\LocalDateAttributeConverter.class
 com\elrancho\paystubwebapp\exception\InvalidSecurityQuestionException.class
 com\elrancho\paystubwebapp\entity\Employee.class
 com\elrancho\paystubwebapp\entity\PaystubId.class
-com\elrancho\paystubwebapp\model\PaystubSummary.class
 com\elrancho\paystubwebapp\MainApp.class
 com\elrancho\paystubwebapp\service\PaystubService.class
 com\elrancho\paystubwebapp\security\SecurityConstants.class
+com\elrancho\paystubwebapp\controller\EmployeeController.class
 com\elrancho\paystubwebapp\service\DbaServiceImpl.class
 com\elrancho\paystubwebapp\util\PaystubUtil.class
 com\elrancho\paystubwebapp\repository\PaystubRepository.class
 com\elrancho\paystubwebapp\service\EmployeeService.class
 com\elrancho\paystubwebapp\service\UserServiceImpl.class
-com\elrancho\paystubwebapp\controller\ViewController.class
 com\elrancho\paystubwebapp\security\SecurityConfiguration.class
 com\elrancho\paystubwebapp\controller\PayStubController.class

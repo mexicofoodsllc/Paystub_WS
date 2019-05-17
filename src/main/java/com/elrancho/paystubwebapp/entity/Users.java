@@ -1,8 +1,5 @@
 package com.elrancho.paystubwebapp.entity;
 
-import java.time.LocalDate;
-import java.util.Collection;
-
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;

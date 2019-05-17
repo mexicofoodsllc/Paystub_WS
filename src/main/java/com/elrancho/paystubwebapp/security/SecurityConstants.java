@@ -2,10 +2,10 @@ package com.elrancho.paystubwebapp.security;
 
 public class SecurityConstants {
 	
-	public  static final String REGISTER_URL = "/users/new";
-	public  static final String PASSWORD_RESET_URL = "/passwordReset/";
-	public  static final String PAYSTUBS_EMPLOYEE_URL = "/payStubs/";
-	public  static final String PAYSTUBS_BY_DATE = "/payStubs/";
+	public  static final String REGISTER_URL = "/empRegSucess";
+	public  static final String PASSWORD_RESET_URL = "/pwdReset";
+	//public  static final String PAYSTUBS_EMPLOYEE_URL = "/payStubs/";
+	//public  static final String PAYSTUBS_BY_DATE = "/payStubs/";
 	
 	public static final String TOKEN_PREFIX= "Bearer ";
 	public static final String HEADER_STRING = "authorization";
