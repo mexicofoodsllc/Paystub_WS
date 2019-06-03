@@ -10,6 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -70,7 +71,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 			throws IOException, ServletException {
 		
 		String msg = failed.getMessage();
-		//response.setStatus(HttpStatus.SC_UNAUTHORIZED);
+		response.setStatus(401);
 				
 		response.addHeader("failedMessage", msg);
 	}

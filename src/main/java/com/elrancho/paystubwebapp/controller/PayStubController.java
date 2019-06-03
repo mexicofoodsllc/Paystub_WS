@@ -2,6 +2,7 @@ package com.elrancho.paystubwebapp.controller;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -81,6 +82,7 @@ public class PayStubController {
 				   grossPayList.add(psutil.grossPayGenerator(d,employeeId));   
 			   }
 			   	System.out.println("grossPayList "+grossPayList);
+			    
 			  return grossPayList;
 		   }
 	
@@ -208,7 +210,7 @@ public class PayStubController {
   
   
 	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080") 
-	@GetMapping(path = "/grossNetPay/{password}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(path = "/grossNetDed/{password}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
    public Map<String, String> getGrossNetPayByDate(@PathVariable String password, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
@@ -220,11 +222,15 @@ public class PayStubController {
 	   
 	   String grossPay = psutil.grossPayGenerator(Date, employeeId);
 	   
-	   Map<String, String> grossNetPay = new HashMap<String, String>();
-	   grossNetPay.put("grossPay", grossPay);
-	   grossNetPay.put("netPay", netPay);
+	   String deduction = psutil.deductionsGenerator(Date, employeeId);
+	   
+	   Map<String, String> grossNetDed = new HashMap<String, String>();
+	   grossNetDed.put("grossPay", grossPay);
+	   grossNetDed.put("netPay", netPay);
+	   grossNetDed.put("deduction",deduction);
+	   
  
-		  return grossNetPay;
+		  return grossNetDed;
 	   }
   
   

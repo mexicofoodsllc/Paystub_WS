@@ -15,9 +15,9 @@ import com.elrancho.paystubwebapp.service.EmployeeServiceImpl;
 
 public class EmployeeServiceTest {
 	
-	/*Instead of instantiating the PasswordResetController, we want to create a mock instance of it. 
+	/*Instead of instantiating the EmployeeServiceImpl, we want to create a mock instance of it. 
 	@InjectMocks creates this object and injects it into the test. 
-	@InjectMocks annotation produces a private attribute called passwordResetController 
+	@InjectMocks annotation produces a private attribute called esimpl 
 	which Mockito is managing for us.*/
 	
 	@InjectMocks

@@ -2,9 +2,12 @@ package com.elrancho.paystubwebapp.util;
 
 import java.text.DecimalFormat;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -118,29 +121,42 @@ public class PaystubUtil {
 		return  netPayString;
 		
 	}
-	
+	//calculate total hours corresponding to dba codes 100,101,800,801
 	public int totalHoursGenerator(LocalDate date, int employeeId) {
 		
 		int totalHours=0;
 		
-		LocalDate saturdayDatepicker2 = dayConverter(date);
-		 List<Integer> hours = psimpl.findTotalHours(saturdayDatepicker2,employeeId);
+		//LocalDate saturdayDatepicker2 = dayConverter(date);
+
+		 //List of dba codes corresponding to the dates chosen by user
+		  List<Integer> codeList = psimpl.findDbaCode(date,employeeId);
 		 
-		 for(Integer hour:hours) {
-			 totalHours += hour;
+		   
+		 List<Integer> hours = psimpl.findTotalHours(date,employeeId);
+		 
+		 for(int i=0;i<codeList.size();i++) {
+			 if(codeList.get(i)==100||codeList.get(i)==101||codeList.get(i)==800 ||codeList.get(i)==801) {
+				 totalHours += hours.get(i);
+			 }
+			 
 		 }
 		return totalHours;
 		
 	}
 
 	public Set<LocalDate> getDates(List<Paystub> paystubList) {
-		Set<LocalDate> dateSet = new TreeSet<LocalDate>();
-		//List<PaystubResponse> paystubList = psimpl.getAllPaystubs(empId);
+		TreeSet<LocalDate> dateSet = new TreeSet<LocalDate>();
+		
 		for(Paystub p:paystubList) {
 			dateSet.add(p.getPayPeriodEndDate());
 		}
 		
-		return dateSet;
+		//sorting dateSet in descending order
+        // using descendingSet() method 
+        NavigableSet<LocalDate> 
+        dateSetReverse = dateSet.descendingSet(); 
+		System.out.println("dateSetReverse "+dateSetReverse);
+		return dateSetReverse;
 	}
 	
 
@@ -169,6 +185,28 @@ public class PaystubUtil {
 		   String grossPayString = df.format(grossPay);
 		
 		 return grossPayString;
+		
+	}
+	
+	public String deductionsGenerator(LocalDate datePicker, int employeeId){
+		
+		 List<Paystub> paystubList= psimpl.findPaystubDetails(datePicker, employeeId);
+		   
+		   //List<Float> deductionsList = new ArrayList<Float>();
+		   float totalDeductions = 0;
+		   
+		   for(Paystub p: paystubList) {
+			   int dbaCode = p.getDbaCode();
+			   if(dbaimpl.getDbaDesciption(dbaCode).contains("Deductions")) {
+				   //deductionsList.add(p.getCurrentAmount());
+				   totalDeductions += p.getCurrentAmount();
+			   }
+		   }
+		   
+		   DecimalFormat df = new DecimalFormat("0.00");
+		   String deductionString = df.format(totalDeductions);
+		   
+		return deductionString;
 		
 	}
 	
