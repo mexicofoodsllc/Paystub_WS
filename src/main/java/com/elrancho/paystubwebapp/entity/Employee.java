@@ -1,9 +1,11 @@
 package com.elrancho.paystubwebapp.entity;
 
 import java.time.LocalDate;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name="Employee")
@@ -11,9 +13,14 @@ public class Employee {
 	@Id
 	int employeeId;
 	String password;
+	
+	@NotNull
 	String ssn;
 	
-	LocalDate hireDate, terminationDate, birthDate;
+	@NotNull
+	LocalDate birthDate;
+	
+	LocalDate hireDate, terminationDate;
 	
 	String status;
 	String jobCode, supervisorID, payMethod, hourlyRatee; 

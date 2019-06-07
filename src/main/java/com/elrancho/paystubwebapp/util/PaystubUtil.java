@@ -135,7 +135,7 @@ public class PaystubUtil {
 		 List<Integer> hours = psimpl.findTotalHours(date,employeeId);
 		 
 		 for(int i=0;i<codeList.size();i++) {
-			 if(codeList.get(i)==100||codeList.get(i)==101||codeList.get(i)==800 ||codeList.get(i)==801) {
+			 if(codeList.get(i)==1||codeList.get(i)==100||codeList.get(i)==101||codeList.get(i)==800 ||codeList.get(i)==801) {
 				 totalHours += hours.get(i);
 			 }
 			 
