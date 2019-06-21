@@ -27,13 +27,13 @@ public class EmployeeController {
 	EmployeeServiceImpl esimpl;
 	
 	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")   
-	@GetMapping(path = "/employee/{password}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(path = "/employee/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 				MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 						MediaType.APPLICATION_XML_VALUE })
 	
-	  public Employee getEmployee(@PathVariable String password) {
+	  public Employee getEmployee(@PathVariable int employeeId) {
 		  System.out.println("Reached employeecontroller");
-		  int employeeId = usimpl.getEmpId(password);
+		  //int employeeId = usimpl.getEmpId(password);
 		  Employee activeEmployee;
 		  
 		  Boolean isActive = esimpl.activeEmployeeCheck(employeeId);

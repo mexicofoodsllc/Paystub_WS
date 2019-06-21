@@ -57,8 +57,8 @@ public class PaystubServiceImpl implements PaystubService {
 	}
 
 	@Override
-	public List<Integer> findTotalHours(LocalDate date,int employeeId) {
-		List<Integer> hoursList = new ArrayList<Integer>();
+	public List<Float> findTotalHours(LocalDate date,int employeeId) {
+		List<Float> hoursList = new ArrayList<Float>();
 		Iterable<Paystub> paystubs = paystubRepository.findByEmployeeId(employeeId);
 		for(Paystub paystub: paystubs) {
 			if(date.equals(paystub.getPayPeriodEndDate())) {

@@ -10,7 +10,7 @@ public interface PaystubService {
 
 	public List<Float> findCurrentAmount(LocalDate Date, int employeeId);
 	public List<Integer> findDbaCode(LocalDate Date,int employeeId);
-	public List<Integer> findTotalHours(LocalDate Date,int employeeId);
+	public List<Float> findTotalHours(LocalDate Date,int employeeId);
 	public Float findTotalYrToPay(LocalDate date,int employeeId);
 	
 	public List<Paystub> findPaystubDetails(LocalDate Date,int employeeId);

@@ -16,8 +16,8 @@ public class Paystub {
 	@EmbeddedId private PaystubId id;
 	
 	String description;
-	int employeeId, dbaCode, hours;
-	float currentAmount, ytdAmount;
+	int employeeId, dbaCode;
+	float currentAmount, ytdAmount, hours;
 
 	LocalDate payPeriodEndDate;  
 	
@@ -73,13 +73,13 @@ public class Paystub {
 
 
 
-	public int getHours() {
+	public float getHours() {
 		return hours;
 	}
 
 
 
-	public void setHours(int hours) {
+	public void setHours(float hours) {
 		this.hours = hours;
 	}
 

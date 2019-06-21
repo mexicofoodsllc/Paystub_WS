@@ -60,12 +60,12 @@ public class PayStubController {
 	
 	//service to return List of gross Pays for the employee
 	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")  
-	@GetMapping(path = "/paystubs/grossPays/{password}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(path = "/paystubs/grossPays/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-	public List<String> getGrossPayList(@PathVariable String password) {
+	public List<String> getGrossPayList(@PathVariable int employeeId) {
 			
-			   int employeeId = usrimpl.getEmpId(password);
+			   //int employeeId = usrimpl.getEmpId(password);
 
 			   
 			   // list of paystubs for employee with id employeeId
@@ -89,12 +89,12 @@ public class PayStubController {
 	
 	//service to return Set of pay period end dates for the employee
 	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")  
-	@GetMapping(path = "/paystubs/dates/{password}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(path = "/paystubs/dates/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-	public Set<LocalDate> getDateSet(@PathVariable String password) {
+	public Set<LocalDate> getDateSet(@PathVariable int employeeId) {
 			
-			   int employeeId = usrimpl.getEmpId(password);
+			   //int employeeId = usrimpl.getEmpId(password);
 
 			   
 			   // list of paystubs for employee with id employeeId
@@ -109,12 +109,12 @@ public class PayStubController {
 	
 	//service to return List of net Pays for the employee
 	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")  
-	@GetMapping(path = "/paystubs/netPays/{password}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(path = "/paystubs/netPays/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-	public List<String> getNetPayList(@PathVariable String password) {
+	public List<String> getNetPayList(@PathVariable int employeeId) {
 			
-			   int employeeId = usrimpl.getEmpId(password);
+			  // int employeeId = usrimpl.getEmpId(password);
 
 			   
 			   // list of paystubs for employee with id employeeId
@@ -137,12 +137,12 @@ public class PayStubController {
  
 	//service to return List of total hours for the employee
 	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")  
-	@GetMapping(path = "/paystubs/hours/{password}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(path = "/paystubs/hours/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-	public List<Integer> getTotalHoursList(@PathVariable String password) {
+	public List<Integer> getTotalHoursList(@PathVariable int employeeId) {
 			
-			   int employeeId = usrimpl.getEmpId(password);
+			  // int employeeId = usrimpl.getEmpId(password);
 
 			   
 			   // list of paystubs for employee with id employeeId
@@ -163,12 +163,12 @@ public class PayStubController {
 		   }
 	
 	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080") 
-	@GetMapping(path = "/earnings/{password}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(path = "/earnings/{employeeId}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-   public List<Paystub> getEarningsByDate(@PathVariable String password, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
+   public List<Paystub> getEarningsByDate(@PathVariable int employeeId, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
 	  
-		int employeeId = usrimpl.getEmpId(password);
+		//int employeeId = usrimpl.getEmpId(password);
 	   List<Paystub> paystubList= psimpl.findPaystubDetails(Date, employeeId);
 	   
 	   List<Paystub> earningsList = new ArrayList<Paystub>();
@@ -187,12 +187,12 @@ public class PayStubController {
 	 
 	
 	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080") 
-	@GetMapping(path = "/deductions/{password}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(path = "/deductions/{employeeId}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-   public List<Paystub> getDeductionsByDate(@PathVariable String password, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
+   public List<Paystub> getDeductionsByDate(@PathVariable int employeeId, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
 	  
-		int employeeId = usrimpl.getEmpId(password);
+		//int employeeId = usrimpl.getEmpId(password);
 	   List<Paystub> paystubList= psimpl.findPaystubDetails(Date, employeeId);
 	   
 	   List<Paystub> deductionsList = new ArrayList<Paystub>();
@@ -210,12 +210,12 @@ public class PayStubController {
   
   
 	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080") 
-	@GetMapping(path = "/grossNetDed/{password}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	@GetMapping(path = "/grossNetDed/{employeeId}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-   public Map<String, String> getGrossNetPayByDate(@PathVariable String password, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
+   public Map<String, String> getGrossNetPayByDate(@PathVariable int employeeId, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
 	  
-		int employeeId = usrimpl.getEmpId(password);
+		//int employeeId = usrimpl.getEmpId(password);
 	   List<Paystub> paystubList= psimpl.findPaystubDetails(Date, employeeId);
 	   
 	   String netPay = psutil.netPayGenerator(Date, employeeId);

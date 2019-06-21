@@ -54,10 +54,11 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 			Users creds = new ObjectMapper()
                     .readValue(req.getInputStream(), Users.class);
 			
+			System.out.println("creds "+creds);
+			
 			//String pwd = creds.getPassword();
 			//int employeeId = usrimpl.getEmpId(pwd);
-			
-
+		
 			return authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(creds.getUserName(), creds.getPassword(), new ArrayList<>()));	
 		
 		} catch (IOException e) {
