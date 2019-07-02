@@ -24,6 +24,7 @@ import com.elrancho.paystubwebapp.util.PaystubUtil;
 
 
 @RestController
+@CrossOrigin
 public class PayStubController {
 
 	@Autowired
@@ -41,7 +42,7 @@ public class PayStubController {
 	
 
 	//service to return all paystub details for the employee
-	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")  
+	
 	@GetMapping(path = "/paystubs/{password}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
@@ -49,8 +50,6 @@ public class PayStubController {
 			
 			   int employeeId = usrimpl.getEmpId(password);
 
-			   System.out.println("Reached pastub controller");
-			   System.out.println(employeeId);
 			   // list of paystubs for employee with id employeeId
 			   List<Paystub> paystubList = psimpl.getAllPaystubs(employeeId);
 			   			   
@@ -58,8 +57,30 @@ public class PayStubController {
 		   }
 	
 	
+	//service to return List of check Numbers for the employee
+	
+		@GetMapping(path = "/paystubs/checkNum/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
+				MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
+						MediaType.APPLICATION_XML_VALUE })
+		public Set<Integer> checkNumList(@PathVariable int employeeId) {
+				
+				   //int employeeId = usrimpl.getEmpId(password);
+
+				   
+				   // list of paystubs for employee with id employeeId
+				   List<Paystub> paystubList = psimpl.getAllPaystubs(employeeId);
+				   
+				   
+				   //map containing check control num as key and pay period end date as value
+				   Map<Integer, LocalDate> checkDateMap = psutil.getDates(paystubList);
+ 
+				  return checkDateMap.keySet();
+			   }
+		
+		
+	
 	//service to return List of gross Pays for the employee
-	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")  
+	
 	@GetMapping(path = "/paystubs/grossPays/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
@@ -71,28 +92,27 @@ public class PayStubController {
 			   // list of paystubs for employee with id employeeId
 			   List<Paystub> paystubList = psimpl.getAllPaystubs(employeeId);
 			   
-			   //set containing unique dates from paystub list
-			   Set<LocalDate> dateSet = psutil.getDates(paystubList);
 			   
+			   //map containing check control num as key and pay period end date as value
+			   Map<Integer, LocalDate> checkDateMap = psutil.getDates(paystubList);
 
-			   //grossPayList has all the grossPays in the table
+			  //grossPayList has all the grossPays in the table
 			   List<String> grossPayList = new ArrayList<String>();
-			   for(LocalDate d:dateSet) {
-				 
-				   grossPayList.add(psutil.grossPayGenerator(d,employeeId));   
+			  
+			   for(int checkNum:checkDateMap.keySet()) {
+				   grossPayList.add(psutil.grossPayGenerator(checkNum,employeeId));   
 			   }
-			   	System.out.println("grossPayList "+grossPayList);
-			    
+			   
 			  return grossPayList;
 		   }
 	
 	
 	//service to return Set of pay period end dates for the employee
-	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")  
+
 	@GetMapping(path = "/paystubs/dates/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-	public Set<LocalDate> getDateSet(@PathVariable int employeeId) {
+	public List<LocalDate> getDateSet(@PathVariable int employeeId) {
 			
 			   //int employeeId = usrimpl.getEmpId(password);
 
@@ -100,15 +120,23 @@ public class PayStubController {
 			   // list of paystubs for employee with id employeeId
 			   List<Paystub> paystubList = psimpl.getAllPaystubs(employeeId);
 			   
-			   //set containing unique dates from paystub list
-			   Set<LocalDate> dateSet = psutil.getDates(paystubList);
- 
-			  return dateSet;
+			   //map containing check control num as key and pay period end date as value
+			   Map<Integer, LocalDate> checkDateMap = psutil.getDates(paystubList);
+			   
+			   //System.out.println("@@@@@@@@@@@@@@@@@@@@@@@@@@@ "+checkDateMap);
+			   
+			   List<LocalDate> dateListDesc = new ArrayList<LocalDate>();
+			   
+			   for(LocalDate d: checkDateMap.values()) {
+				   dateListDesc.add(d);
+			   }
+			   
+			  return dateListDesc;
 		   }
 	
 	
 	//service to return List of net Pays for the employee
-	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")  
+
 	@GetMapping(path = "/paystubs/netPays/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
@@ -120,15 +148,15 @@ public class PayStubController {
 			   // list of paystubs for employee with id employeeId
 			   List<Paystub> paystubList = psimpl.getAllPaystubs(employeeId);
 			   
-			   //set containing unique dates from paystub list
-			   Set<LocalDate> dateSet = psutil.getDates(paystubList);
+			   //map containing check control num as key and pay period end date as value
+			   Map<Integer, LocalDate> checkDateMap = psutil.getDates(paystubList);
 
 		   
 			   List<String> netPayList = new ArrayList<String>();
 		  
-			   for(LocalDate d:dateSet) {
+			   for(int checkNum:checkDateMap.keySet()) {
 			   
-				   netPayList.add(psutil.netPayGenerator(d,employeeId));
+				   netPayList.add(psutil.netPayGenerator(checkNum,employeeId));
 			   }
 			   
 			  return netPayList;
@@ -136,7 +164,7 @@ public class PayStubController {
 	
  
 	//service to return List of total hours for the employee
-	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")  
+
 	@GetMapping(path = "/paystubs/hours/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
@@ -148,28 +176,28 @@ public class PayStubController {
 			   // list of paystubs for employee with id employeeId
 			   List<Paystub> paystubList = psimpl.getAllPaystubs(employeeId);
 			   
-			   //set containing unique dates from paystub list
-			   Set<LocalDate> dateSet = psutil.getDates(paystubList);
+			   //map containing check control num as key and pay period end date as value
+			   Map<Integer, LocalDate> checkDateMap = psutil.getDates(paystubList);
 
 		   
 			   List<Integer> hoursList = new ArrayList<Integer>();
 			  
-			  for(LocalDate d:dateSet) {
-				hoursList.add(psutil.totalHoursGenerator(d,employeeId));
+			  for(int checkNum:checkDateMap.keySet()) {
+				hoursList.add(psutil.totalHoursGenerator(checkNum,employeeId));
 				   
 			   }
 			   
 			  return hoursList;
 		   }
 	
-	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080") 
-	@GetMapping(path = "/earnings/{employeeId}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
+
+	@GetMapping(path = "/earnings/{employeeId}/{checkNum}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-   public List<Paystub> getEarningsByDate(@PathVariable int employeeId, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
+   public List<Paystub> getEarningsByDate(@PathVariable int employeeId, @PathVariable int checkNum) {
 	  
 		//int employeeId = usrimpl.getEmpId(password);
-	   List<Paystub> paystubList= psimpl.findPaystubDetails(Date, employeeId);
+	   List<Paystub> paystubList= psimpl.findPaystubDetails(checkNum, employeeId);
 	   
 	   List<Paystub> earningsList = new ArrayList<Paystub>();
 	   
@@ -186,14 +214,14 @@ public class PayStubController {
   
 	 
 	
-	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080") 
-	@GetMapping(path = "/deductions/{employeeId}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
+
+	@GetMapping(path = "/deductions/{employeeId}/{checkNum}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-   public List<Paystub> getDeductionsByDate(@PathVariable int employeeId, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
+   public List<Paystub> getDeductionsByDate(@PathVariable int employeeId, @PathVariable int checkNum) {
 	  
 		//int employeeId = usrimpl.getEmpId(password);
-	   List<Paystub> paystubList= psimpl.findPaystubDetails(Date, employeeId);
+	   List<Paystub> paystubList= psimpl.findPaystubDetails(checkNum, employeeId);
 	   
 	   List<Paystub> deductionsList = new ArrayList<Paystub>();
 	   
@@ -209,20 +237,20 @@ public class PayStubController {
 	   }
   
   
-	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080") 
-	@GetMapping(path = "/grossNetDed/{employeeId}/{Date}", produces = { MediaType.APPLICATION_JSON_VALUE,
+	
+	@GetMapping(path = "/grossNetDed/{employeeId}/{checkNum}", produces = { MediaType.APPLICATION_JSON_VALUE,
 			MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 					MediaType.APPLICATION_XML_VALUE })
-   public Map<String, String> getGrossNetPayByDate(@PathVariable int employeeId, @PathVariable @DateTimeFormat(pattern="yyyy-MM-dd") LocalDate Date) {
+   public Map<String, String> getGrossNetPayByDate(@PathVariable int employeeId, @PathVariable int checkNum) {
 	  
 		//int employeeId = usrimpl.getEmpId(password);
-	   List<Paystub> paystubList= psimpl.findPaystubDetails(Date, employeeId);
+	  // List<Paystub> paystubList= psimpl.findPaystubDetails(Date, employeeId);
 	   
-	   String netPay = psutil.netPayGenerator(Date, employeeId);
+	   String netPay = psutil.netPayGenerator(checkNum, employeeId);
 	   
-	   String grossPay = psutil.grossPayGenerator(Date, employeeId);
+	   String grossPay = psutil.grossPayGenerator(checkNum, employeeId);
 	   
-	   String deduction = psutil.deductionsGenerator(Date, employeeId);
+	   String deduction = psutil.deductionsGenerator(checkNum, employeeId);
 	   
 	   Map<String, String> grossNetDed = new HashMap<String, String>();
 	   grossNetDed.put("grossPay", grossPay);

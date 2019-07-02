@@ -3,10 +3,15 @@ package com.elrancho.paystubwebapp.util;
 import java.text.DecimalFormat;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -55,7 +60,7 @@ public class PaystubUtil {
 			
 		}
 	//method to check if the user entered date is in the database
-	public boolean validDateCheck(LocalDate datePicker, int employeeId) {
+	/*public boolean validDateCheck(LocalDate datePicker, int employeeId) {
 		
 		LocalDate saturdayDatepicker2 = dayConverter(datePicker);
 		List<Paystub> paystubList = psimpl.findPaystubDetails(saturdayDatepicker2, employeeId);
@@ -69,21 +74,20 @@ public class PaystubUtil {
 		
 		return isDateValid;
 		
-	}
+	}*/
 	//list of amounts in $ corresponding to selected date
-	public List<Float> curAmountGenerator(LocalDate datePicker, int employeeId){
-		LocalDate saturdayDatepicker2 = dayConverter(datePicker);
-		 List<Float> currentAmount = psimpl.findCurrentAmount(saturdayDatepicker2, employeeId);
+	public List<Float> curAmountGenerator(int checkNum, int employeeId){
+		
+		 List<Float> currentAmount = psimpl.findCurrentAmount(checkNum, employeeId);
 		return currentAmount;
 	
 	}
 	
 	//list of dba types corresponding to selected date
-	public List<String> dbaTypeGenerator(LocalDate datepicker,int employeeId){
-		LocalDate saturdayDatepicker2 = dayConverter(datepicker);
+	public List<String> dbaTypeGenerator(int checkNum,int employeeId){
 		
 		//List of dba codes corresponding to the dates chosen by user
-		   List<Integer> codeList = psimpl.findDbaCode(saturdayDatepicker2, employeeId); 
+		   List<Integer> codeList = psimpl.findDbaCode(checkNum, employeeId); 
 		   List<String> dbaType = dbaimpl.findDbaType(codeList);
 		   
 		   dbaType.set(1,"Federal Income Tax") ;
@@ -94,18 +98,17 @@ public class PaystubUtil {
 		
 	}
 	
-	public String netPayGenerator(LocalDate date, int employeeId) {
+	public String netPayGenerator(int checkNum, int employeeId) {
 		
 		
-		//LocalDate saturdayDatepicker2 = dayConverter(date);
-		String grossPayString = grossPayGenerator(date,employeeId);
+		String grossPayString = grossPayGenerator(checkNum,employeeId);
 		//initializing netpay to grossPay
 		float netPay = Float.parseFloat(grossPayString);
 		
-		List<Float> curAmount = psimpl.findCurrentAmount(date,employeeId);
+		List<Float> curAmount = psimpl.findCurrentAmount(checkNum,employeeId);
 
 		 //List of dba codes corresponding to the dates chosen by user
-		   List<Integer> codeList = psimpl.findDbaCode(date,employeeId);
+		   List<Integer> codeList = psimpl.findDbaCode(checkNum,employeeId);
 		   
 		 //list of  description- Earning or deduction
 		   List<String> dbaDesc = dbaimpl.findDbaDescription(codeList);
@@ -115,6 +118,7 @@ public class PaystubUtil {
 				   netPay=netPay-curAmount.get(i);
 			   }
 		   }
+		   
 		   DecimalFormat df = new DecimalFormat("0.00");
 		   String netPayString = df.format(netPay);
 		  
@@ -122,17 +126,17 @@ public class PaystubUtil {
 		
 	}
 	//calculate total hours corresponding to dba codes 100,101,800,801
-	public int totalHoursGenerator(LocalDate date, int employeeId) {
+	public int totalHoursGenerator(int checkNum, int employeeId) {
 		
 		int totalHours=0;
 		
 		//LocalDate saturdayDatepicker2 = dayConverter(date);
 
 		 //List of dba codes corresponding to the dates chosen by user
-		  List<Integer> codeList = psimpl.findDbaCode(date,employeeId);
+		  List<Integer> codeList = psimpl.findDbaCode(checkNum,employeeId);
 		 
 		   
-		 List<Float> hours = psimpl.findTotalHours(date,employeeId);
+		 List<Float> hours = psimpl.findTotalHours(checkNum,employeeId);
 		 
 		 for(int i=0;i<codeList.size();i++) {
 			 if(codeList.get(i)==1||codeList.get(i)==100||codeList.get(i)==101||codeList.get(i)==800 ||codeList.get(i)==801||codeList.get(i)==500) {
@@ -144,7 +148,7 @@ public class PaystubUtil {
 		
 	}
 
-	public Set<LocalDate> getDates(List<Paystub> paystubList) {
+/*	public Set<LocalDate> getDates(List<Paystub> paystubList) {
 		TreeSet<LocalDate> dateSet = new TreeSet<LocalDate>();
 		
 		for(Paystub p:paystubList) {
@@ -159,18 +163,38 @@ public class PaystubUtil {
 		return dateSetReverse;
 	}
 	
-
-
-	public String grossPayGenerator(LocalDate datePicker, int employeeId){
-		LocalDate saturdayDatepicker2 = dayConverter(datePicker);
+*/
+	
+	public Map<Integer, LocalDate> getDates(List<Paystub> paystubList) {
+		Map<Integer,LocalDate> checkDateMap = new HashMap<Integer,LocalDate>();
 		
+		for(Paystub p:paystubList) {
+			checkDateMap.put(p.getId().getCheckControl(),p.getPayPeriodEndDate());
+		}
+		
+		//sorting checkDateMap in descending order
+     
+		Map<Integer,LocalDate> sortedMap = checkDateMap
+					.entrySet()
+					.stream()
+					.sorted(Collections.reverseOrder(Map.Entry.comparingByValue()))
+					.collect( Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (e1, e2) -> e2,
+					LinkedHashMap::new));
+		//System.out.println("*************$$$$$$$$********* sorted map "+sortedMap);
+		return sortedMap;
+		
+	}
+
+	public String grossPayGenerator(int checkNum, int employeeId){
+		
+
 	float grossPay = 0;
 		
-		List<Float> curAmount = psimpl.findCurrentAmount(saturdayDatepicker2,employeeId);
-
+		List<Float> curAmount = psimpl.findCurrentAmount(checkNum,employeeId);
+		 System.out.println("GGGGGGGGGGGGGGGGGGGGG "+curAmount);
 
 		 //List of dba codes corresponding to the dates chosen by user
-		   List<Integer> codeList = psimpl.findDbaCode(saturdayDatepicker2,employeeId);
+		   List<Integer> codeList = psimpl.findDbaCode(checkNum,employeeId);
 		   
 		 //list of  description- Earning or deduction
 		   List<String> dbaDesc = dbaimpl.findDbaDescription(codeList);
@@ -188,9 +212,9 @@ public class PaystubUtil {
 		
 	}
 	
-	public String deductionsGenerator(LocalDate datePicker, int employeeId){
+	public String deductionsGenerator(int checkNum, int employeeId){
 		
-		 List<Paystub> paystubList= psimpl.findPaystubDetails(datePicker, employeeId);
+		 List<Paystub> paystubList= psimpl.findPaystubDetails(checkNum, employeeId);
 		   
 		   //List<Float> deductionsList = new ArrayList<Float>();
 		   float totalDeductions = 0;

@@ -16,8 +16,9 @@ import com.elrancho.paystubwebapp.service.EmployeeServiceImpl;
 import com.elrancho.paystubwebapp.service.UserServiceImpl;
 
 
-//not used
+
 @RestController
+@CrossOrigin  
 public class EmployeeController {
 	
 	@Autowired
@@ -26,7 +27,7 @@ public class EmployeeController {
 	@Autowired
 	EmployeeServiceImpl esimpl;
 	
-	@CrossOrigin(origins = "http://ec2-3-90-133-23.compute-1.amazonaws.com:8080")   
+	
 	@GetMapping(path = "/employee/{employeeId}", produces = { MediaType.APPLICATION_JSON_VALUE,
 				MediaType.APPLICATION_XML_VALUE }, consumes = { MediaType.APPLICATION_JSON_VALUE,
 						MediaType.APPLICATION_XML_VALUE })
